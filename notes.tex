@@ -1,0 +1,40 @@
+\section*{Notes}
+\label{sec:notes}
+
+\subsection*{Libraries}
+\label{subsec:libs}
+
+To my knowledge, there are two major C++ libraries for working with the Archive
+file.  Github user Ahom has created a library for working with File Records and
+extracting images that you can find 
+\href{https://github.com/ahom/gw2DatTools/}{here}.  Github user Rhoot has
+created a library that will extract information from a large number of files
+within the Archive.  You can find his work
+\href{https://github.com/rhoot/gw2formats}{here}.
+
+Most of the information in this document has come from these projects.
+
+\subsection*{Endianness and Numbers}
+\label{subsec:endiannum}
+
+When I list values, sometimes I will list them as full numbers (like $40CB_x$)
+and sometimes I will list them as individual bytes (like $[CB_x,40_x]$).  When
+I list the individual bytes, they are listed in the order they appear in the
+Archive.  When I list them as full numbers, that is their actual value.
+
+The Archive is arranged in little-endian format.  This means that if you see a
+16-bit value $[CB_x,40_x]$, its actual value is $40CB_x$.
+
+All numbers I list in this document are decimal (base 10) unless specified
+otherwise.  Hexadecimal numbers are followed by a subscript x ($1A_x$).
+Sometimes a single byte will be listed as a character rather than a number.  In
+these cases the value of that byte is the ASCII code of the character listed.
+
+\subsection*{Disclaimer}
+\label{subsec:disclaimer}
+
+I do not condone use of this document to modify the archive for any reason.
+Modifying the archive is a direct violation of the Terms of Service you agreed
+to follow when you bought the game.
+
+
