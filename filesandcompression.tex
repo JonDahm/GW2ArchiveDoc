@@ -1,0 +1,40 @@
+\section{Files and Compression}
+\label{sec:filesandcompression}
+
+This chapter will introduce you to how to identify files and decompress files
+that have been compressed.  Additionally, I'll discuss the compression used on
+many of the texture files in the Archive.  After reading this chapter, you
+should be able to, given the address of the start of a file, provide its raw
+data, whether the file was compressed or not.
+
+\subsection{File Types}
+\label{subsec:filetypes}
+
+Every file starts with an 8-byte header identifying the type of file and how
+large it is.  The first 4 bytes of the header are the file's type identifier,
+typically represented by four character codes (4CC).  The second 4 bytes tell
+you how long the uncompressed file is, if the file is compressed.
+
+In the latest version of the Archive at the time of this writing, 99\% of the
+files were compressed.  All of these files are represented in the general file
+header by one 4CC.  To find the actual 4CC defining the file type, you have to
+decompress the file, which we will go over in the next section.
+
+The following table describes all 4CCs that appear in the general file header,
+listed in decreasing order of frequency:
+\\
+
+\begin{tabular}{rl}
+	\hline
+	\fourcc{\hex{08}}{\hex{00}}{\hex{01}}{\hex{80}} & Compressed File  \\
+	\fourcc{`A'}{`T'}{`E'}{`X'} & General Use Texture  \\
+	\fourcc{`A'}{`T'}{`E'}{`U'} & UI Texture  \\
+	\fourcc{`K'}{`B'}{`2'}{`f'} & (unknown)  \\
+	\fourcc{`K'}{`B'}{`2'}{`g'} & (unknown)  \\
+	\fourcc{\hex{7C}}{\hex{1A}}{`I'}{`z'} & (unknown)  \\
+	\fourcc{\hex{97}}{`A'}{`N'}{\hex{1A}} & (unknown)  \\
+	\hline
+\end{tabular}
+
+
+
