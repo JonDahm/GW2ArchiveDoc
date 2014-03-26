@@ -36,5 +36,173 @@ listed in decreasing order of frequency:
 	\hline
 \end{tabular}
 
+\subsection{Compression}
+\label{subsec:compression}
 
+Note to self: Add illustrations.
+
+Compression is a difficult subject to describe tersely.  The compression used in
+the Archive is very similar to that produced by the DEFLATE algorithm.  If you
+are familiar with the DEFLATE algorithm, you may notice them.  To keep things
+(relatively) short, however, I won't describe every difference between the two.
+
+Data is compressed using Huffman codes and back-copying.  The former is a method
+of taking a set of data and compressing it as small as possible, and the latter
+is a method of further compressing the data by replacing reoccuring data with a
+refrence to the last time it occured.  I won't go into the details of how all
+this works, so if you aren't familiar with either of these, read
+\href{http://zlib.net/feldspar.html}{this fantastic article on zlib} which does
+a wonderful job explaining the concepts.  Be sure to understand these concepts
+well before continuing in this section, or you will be lost.  If this is well
+beyond you, and you don't care particularly about implementing a decompression
+algorithm yourself, just use Ahom's decompression algorithm and skip the rest
+of this chapter.
+
+To begin, it is incredibly important to note the order in which bits are read.
+Strangely enough, bytes aren't read from beginning to end --- instead, they
+are split into little-endian 32-bit values, and read from highest bit to lowest.
+For illustration, see Figure BLAH.  When I refer to ordering of elements in this
+section, I assume that bits are being read in this order.
+
+Next, every 64KiB, 4 bytes are skipped.  As of the writing of this document, I
+am unaware the purpose of this.  I would guess that those 4 bytes are a check
+on the previous data in order to help detect corruption.
+
+The compressed data starts with a single byte that represents an adjustment to
+any back-copy sizes encountered in the data.  This should be saved for later
+use.  The rest of the data is split into blocks.
+
+Each block begins with two Huffman Trees describing the Huffman codes for the
+literal/copy-length alphabet and the copy-offset alphabet. These are followed
+by 4 bits which represent the number of codes from the first alphabet to expect
+in this section. The rest of the block is the Huffman codes representing the
+information compressed in this section.
+
+In the next subsection, I'll describe how you generate Huffman codes from the
+Huffman Trees presented in each block.
+
+\subsection{Huffman Trees}
+\label{subsec:huffmantrees}
+
+Each tree can represent a variable number of values.  The first 16 bits are an
+unsigned value representing how many values this tree is giving Huffman codes
+to.  This is followed by a number of entries describing sometimes several codes
+at once.  These entries are compressed using predefined codes found in Appendix
+A.
+
+Each entry represents at least one value and its code.  The first entry refers
+to the highest values the tree represents, with each successive entry referring
+to a lower value.  The highest three bits state how many more values this entry
+applies to.  The lowest 5 bits state how long the Huffman codes are for these
+values.  If the length is 0, those values aren't actually represented in the
+tree, and you can skip over them.
+
+As it turns out, in order to generate a valid Huffman code for a value, all you
+need to know is how long the Huffman code for it is.  The following algorithm
+derives the Huffman codes for all values whose lengths you know are non-zero.
+
+Sort all of your value+code-length pairs first in ascending order of length,
+then in ascending order of value.  Assign the first value a code of all 1's.
+For each successive value that uses the same length code, decrement the code by
+one.  When you reach a value that uses more code bits, multiply the last code by
+2 and then subtract one.  Continue this process until you have assigned each
+value a Huffman code.
+
+The Tree representing the literal/copy-length alphabet cannot have more than
+285 values in it. The Tree representing the copy-offset alphabet cannot have
+more than 34 values.
+
+\subsection{Translating Huffman Codes to Data}
+\label{subsec:codetodata}
+
+In each block, after the Huffman Trees, there are 4 bits describing how many
+codes from the literal/copy-length alphabet there in the block.  The number is
+determined by adding one to the value of the 4 bits and then multiplying by
+\hex{1000}.  If the end of the file has been reached, then this number may be
+greater than the actual number of codes, so you'll have to watch to make sure
+you don't overshoot the end of the stream.
+
+There are two modes to translating the codes to data --- literal, where each
+code matches one byte, and copy, where extra data follows the code describing
+how many bytes to copy from where in the output stream generated so far.  If the
+value of the code translated is less than \hex{100}, then the output is a byte
+with that value.  If the value is greater than \hex{100}, then you have to copy
+previous output back into the stream.
+
+Following a copy code are additional bits that add to the length represented by
+the code itself.  Table \ref{tab:copylength} provides the base lengths for each
+value and how many additional bits you must read and add to the base length.
+
+\begin{table}[htp]\begin{center}
+	\caption{Copy Length Table}
+	\label{tab:copylength}
+	
+	\begin{tabular}{|r|r|r|c|r|r|r|}
+		\hline
+		\textbf{Code} & \textbf{Base} & \textbf{Additional Bits} & & %
+		\textbf{Code} & \textbf{Base} & \textbf{Additional Bits} \\
+		\hline
+		\hex{100} &  1 & 0 & & \hex{110} &  33 & 3 \\
+		\hex{101} &  2 & 0 & & \hex{111} &  41 & 3 \\
+		\hex{102} &  3 & 0 & & \hex{112} &  49 & 3 \\
+		\hex{103} &  4 & 0 & & \hex{113} &  57 & 3 \\
+		\hline
+		\hex{104} &  5 & 0 & & \hex{114} &  65 & 4 \\
+		\hex{105} &  6 & 0 & & \hex{115} &  81 & 4 \\
+		\hex{106} &  7 & 0 & & \hex{116} &  97 & 4 \\
+		\hex{107} &  8 & 0 & & \hex{117} & 113 & 4 \\
+		\hline
+		\hex{108} &  9 & 1 & & \hex{118} & 129 & 5 \\
+		\hex{109} & 11 & 1 & & \hex{119} & 161 & 5 \\
+		\hex{10A} & 13 & 1 & & \hex{11A} & 193 & 5 \\
+		\hex{10B} & 15 & 1 & & \hex{11B} & 225 & 5 \\
+		\hline
+		\hex{10C} & 17 & 2 & & \hex{11C} & 256 & 0 \\
+		\hex{10D} & 21 & 2 & & & & \\
+		\hex{10E} & 25 & 2 & & & & \\
+		\hex{10F} & 29 & 2 & & & & \\
+		\hline
+	\end{tabular}
+\end{center}\end{table}
+
+After that is a code from the copy-offset alphabet.  This also has additional
+bits following it to add to it. Table \ref{tab:copyoffset} details the base
+offsets and the number of additional bits for each value.
+
+\begin{table}[htp]\begin{center}
+	\caption{Copy Offset Table}
+	\label{tab:copyoffset}
+	
+	\begin{tabular}{|r|r|r|c|r|r|r|}
+		\hline
+		\textbf{Code} & \textbf{Base} & \textbf{Additional Bits} & & %
+		\textbf{Code} & \textbf{Base} & \textbf{Additional Bits} \\
+		\hline
+		\hex{0}  &   \hex{1} & 0 & & \hex{12} &   \hex{201} &  8 \\
+		\hex{1}  &   \hex{2} & 0 & & \hex{13} &   \hex{301} &  8 \\
+		\hex{2}  &   \hex{3} & 0 & & \hex{14} &   \hex{401} &  9 \\
+		\hex{3}  &   \hex{4} & 0 & & \hex{15} &   \hex{601} &  9 \\
+		\hex{4}  &   \hex{5} & 1 & & \hex{16} &   \hex{801} & 10 \\
+		\hex{5}  &   \hex{7} & 1 & & \hex{17} &   \hex{C01} & 10 \\
+		\hex{6}  &   \hex{9} & 2 & & \hex{18} &  \hex{1001} & 11 \\
+		\hex{7}  &   \hex{D} & 2 & & \hex{19} &  \hex{1801} & 11 \\
+		\hex{8}  &  \hex{11} & 3 & & \hex{1A} &  \hex{2001} & 12 \\
+		\hex{9}  &  \hex{19} & 3 & & \hex{1B} &  \hex{3001} & 12 \\
+		\hex{A}  &  \hex{21} & 4 & & \hex{1C} &  \hex{4001} & 13 \\
+		\hex{B}  &  \hex{31} & 4 & & \hex{1D} &  \hex{6001} & 13 \\
+		\hex{C}  &  \hex{41} & 5 & & \hex{1E} &  \hex{8001} & 14 \\
+		\hex{D}  &  \hex{61} & 5 & & \hex{1F} &  \hex{C001} & 14 \\
+		\hex{E}  &  \hex{81} & 6 & & \hex{20} & \hex{10001} & 15 \\
+		\hex{F}  &  \hex{C1} & 6 & & \hex{21} & \hex{18001} & 15 \\
+		\hex{10} & \hex{101} & 7 & & & & \\
+		\hex{11} & \hex{181} & 7 & & & & \\
+		\hline
+	\end{tabular}
+\end{center}\end{table}
+
+To calculate the total length of the copy, add the base length, the value of the
+additional length bits, and the copy size adjustment value from the beginning of
+the file.  To calculate the total offset of the copy, add the base offset and
+the additional offset bits.  It may be helpful to note that the sliding window
+on this algorithm appears to be 128KiB.
 
