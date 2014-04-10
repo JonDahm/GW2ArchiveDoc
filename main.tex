@@ -5,13 +5,15 @@
 %\subtitle{Otherwise Known as the GW2.DAT File}
 
 \pagestyle{headings}
-\includeonly{notes,filerecords,filesandcompression}
+\includeonly{notes,filerecords,filesandcompression,appendixA}
 \usepackage[pdftex,colorlinks,%
             pdftitle={The Format of the Guild Wars 2 Archive File}%
 			]{hyperref}
+\usepackage{longtable}
 
 \newcommand{\fourcc}[4]{\texttt{[#1,#2,#3,#4]}}
 \newcommand{\hex}[1]{\texttt{#1$_x$}}
+\newcommand{\bin}[1]{\texttt{#1$_b$}}
 
 \begin{document}
 
@@ -27,6 +29,8 @@
 \include{generalfiles}
 
 \include{packfiles}
+
+\include{appendixA}
 
 \end{document}
 
