@@ -1,5 +1,5 @@
-\section{File Records}
-\label{sec:filerecords}
+\chapter{File Records}
+\label{chap:filerecords}
 
 This chapter will introduce you to the main portions of the Archive, from which 
 you can find every file represented within.  After reading this chapter, you
@@ -7,8 +7,8 @@ should be able to produce a list of all files within the archive.  Additionally,
 if a file within the archive is referenced by its ID, you should be able to
 retrieve it.
 
-\subsection{The Archive Header}
-\label{subsec:archhead}
+\section{The Archive Header}
+\label{sec:archhead}
 
 The Archive begins with a 40-byte header which describes some of the properties
 of the Archive and points to the Main File Table.  The format of this header
@@ -50,8 +50,8 @@ can be found in Table \ref{tab:archhead}.
 	\end{tabular}
 \end{center}\end{table}
 
-\subsection{The Main File Table}
-\label{subsec:mft}
+\section{The Main File Table}
+\label{sec:mft}
 
 The Main File Table (MFT) is a list of all of the files in the Archive.  Its
 structure begins with a 24-byte-long header, whose format is given in Table
@@ -67,7 +67,7 @@ Archive.  They are documented below:
 \begin{tabular}{rl}
 	\hline
 	1     & Archive Header  \\
-	2     & File ID Table (See Section \ref{subsec:fidtab}) \\
+	2     & File ID Table (See Section \ref{sec:fidtab}) \\
 	3     & MFT (self reference)  \\
 	4--15 & Blank Entries  \\
 	\hline
@@ -135,8 +135,8 @@ Archive.  They are documented below:
 \end{center}\end{table}
 
 
-\subsection{The File ID Table}
-\label{subsec:fidtab}
+\section{The File ID Table}
+\label{sec:fidtab}
 
 The File ID Table gives each file in the MFT an ID.  Each entry in the table
 has the format listed in table \ref{tab:fident}.  The entries are not listed in

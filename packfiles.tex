@@ -1,0 +1,163 @@
+\chapter{Pack Files}
+\label{chap:packfiles}
+
+This chapter will introduce you to one file type -- The Pack File.  This file
+type is used to store a large portion of the game data, and has many subtypes
+for data such as animations, models, maps, textures, and audio.  You'll learn
+how to navigate through the pack file to grab individual portions of the data
+it holds, as well as what data each subtype contains.
+
+\section{Headers}
+\label{sec:pfheaders}
+
+Each Pack File begins with a 12-byte header identifying the type of data
+contained.  This header includes the 4-byte Character Code identifier labeling
+the file as a Pack File. The format of this header can be found in Table
+\ref{tab:pfheader}.
+
+\begin{table}[htp]\begin{center}
+	\caption{the Pack File header}
+	\label{tab:pfheader}
+	
+	\begin{tabular}{|r|r|l|p{2.5in}|}
+		\hline
+		\textbf{Byte} & \textbf{Size} & \textbf{Value} & \textbf{Description} \\
+		\hline
+		0 & 2 & Identifier  & Always ['P','F'] \\
+		\hline
+		2 & 4 & Unknown     & Always \hex{1} \\
+		\hline
+		6 & 2 & Header Size & Always 12 \\
+		\hline
+		8 & 4 & Type        & 4 Character Codes defining the data held in this
+		                      Pack File. \\
+		\hline
+	\end{tabular}
+\end{center}\end{table}
+
+Each Pack File is split into blocks of data, called Chunks.  The first chunk
+follows immediately after the Pack File header.  Each one contains a pointer
+to the next one.
+
+Chunks are identified by 4 character codes, which determines the format of the
+chunk and the data stored in it.  While different Pack Files may share chunks
+with the same identifier, these chunks may not be the same.  For example, the
+Content Manifest and Map Metadata Pack Files both have a chunk labeled 'Main,'
+but their formats are different.
+
+Chunks begin with a 16-byte header describing where the next chunk is in the
+file and the type of data stored in this chunk.  The format can be found in
+Table \ref{tab:pfchunkheader}.
+
+\begin{table}[htp]\begin{center}
+	\caption{the Chunk header}
+	\label{tab:pfchunkheader}
+	
+	\begin{tabular}{|r|r|l|p{2.5in}|}
+		\hline
+		\textbf{Byte} & \textbf{Size} & \textbf{Value} & \textbf{Description} \\
+		\hline
+		 0 & 4 & Identifier      & Type of Chunk \\
+		\hline
+		 4 & 4 & Next Chunk      & Number of bytes after the end of this value
+		                           the next chunk appears. \\
+		\hline
+		 8 & 2 & Unknown         & \\
+		\hline
+		10 & 2 & Header Size     & Always 12 \\
+		\hline
+		12 & 4 & Unknown Pointer & A pointer to an unknown data structure. \\
+		\hline
+	\end{tabular}
+\end{center}\end{table}
+
+In table \ref{tab:pftypes} you will find all the known Pack File types, as well
+as the chunks each one contains.  The following sections will go into each chunk
+and its format.
+
+\begin{table}[htp]\begin{center}
+	\caption{Pack File Types}
+	\label{tab:pftypes}
+	
+	\begin{tabular}{rrl|p{1.5in}}
+		\textbf{FourCC} & \textbf{Value} & \textbf{Name} & \textbf{Included Chunks} \\
+		\hline%\fourcc{`0'}{`0'}{`0'}{`0'}
+		\fourcc{`a'}{`n'}{`i'}{`c'} & \hex{63696E61} & Animation Sequence %
+			& \fourcc{`s'}{`e'}{`q'}{`n'} \\
+		\hline
+		\fourcc{`A'}{`S'}{`N'}{`D'} & \hex{444e5341} & Audio %
+			& \fourcc{`A'}{`S'}{`N'}{`D'} \\
+		\hline
+		\fourcc{`A'}{`B'}{`I'}{`X'} & \hex{58494241} & Bank Index %
+			& \fourcc{`B'}{`I'}{`D'}{`X'} \\
+		\hline
+		\fourcc{`A'}{`B'}{`N'}{`K'} & \hex{4b4e4241} & Bank %
+			& \fourcc{`B'}{`K'}{`C'}{`K'} \\
+		\hline
+		\fourcc{`c'}{`m'}{`a'}{`C'} & \hex{43616d63} & Collide Model Manifest %
+			& \fourcc{`m'}{`a'}{`i'}{`n'} \\
+		\hline
+		\fourcc{`c'}{`m'}{`p'}{`c'} & \hex{63706d63} & Composite %
+			& \fourcc{`c'}{`o'}{`m'}{`p'} \\
+		\hline
+		\fourcc{`c'}{`n'}{`t'}{`c'} & \hex{63746e63} & Content Manifest %
+			& \fourcc{`M'}{`a'}{`i'}{`n'} \\
+		\hline
+		\fourcc{`e'}{`m'}{`o'}{`c'} & \hex{636f6d65} & Emote Animation %
+			& \fourcc{`a'}{`n'}{`i'}{`m'} \\
+		\hline
+		\fourcc{`e'}{`u'}{`l'}{`a'} & \hex{616c7565} & EULA %
+			& \fourcc{`e'}{`u'}{`l'}{`a'} \\
+		\hline
+		\fourcc{`h'}{`v'}{`k'}{`C'} & \hex{436b7668} & Havok %
+			& \fourcc{`h'}{`a'}{`v'}{`k'} \\
+		\hline
+		\fourcc{`m'}{`M'}{`e'}{`t'} & \hex{74654d6d} & Map Metadata %
+			& \fourcc{`M'}{`a'}{`i'}{`n'} \\
+		\hline
+		\fourcc{`m'}{`a'}{`p'}{`c'} & \hex{6370616d} & Map %
+			& \fourcc{`a'}{`u'}{`d'}{`i'},    \fourcc{`m'}{`s'}{`n'}{\hex{00}},
+			\fourcc{`p'}{`a'}{`r'}{`m'},      \fourcc{`s'}{`h'}{`o'}{`r'},
+			\fourcc{`s'}{`u'}{`r'}{`f'},      \fourcc{`t'}{`r'}{`n'}{`i'},
+			\fourcc{`a'}{`r'}{`e'}{`a'},      \fourcc{`h'}{`a'}{`v'}{`k'},
+			\fourcc{`c'}{`u'}{`b'}{`e'},      \fourcc{`d'}{`c'}{`a'}{`l'},
+			\fourcc{`e'}{`n'}{`v'}{\hex{00}}, \fourcc{`l'}{`g'}{`h'}{`t'},
+			\fourcc{`p'}{`r'}{`p'}{`2'},      \fourcc{`r'}{`i'}{`v'}{`e'},
+			\fourcc{`s'}{`h'}{`e'}{`x'},      \fourcc{`t'}{`r'}{`n'}{\hex{00}},
+			\fourcc{`z'}{`o'}{`n'}{`2'} \\
+		\hline
+		\fourcc{`m'}{`p'}{`s'}{`d'} & \hex{6473706d} & Map Shadow %
+			& \fourcc{`s'}{`h'}{`a'}{`d'} \\
+		\hline
+		\fourcc{`A'}{`M'}{`A'}{`T'} & \hex{54414d41} & Material %
+			& \fourcc{`G'}{`R'}{`M'}{`T'}, \fourcc{`D'}{`X'}{`9'}{`S'} \\
+		\hline
+		\fourcc{`M'}{`O'}{`D'}{`L'} & \hex{4c444f4d} & Model %
+			& \fourcc{`A'}{`N'}{`I'}{`M'}, \fourcc{`M'}{`O'}{`D'}{`L'},
+			\fourcc{`G'}{`E'}{`O'}{`M'}, \fourcc{`P'}{`R'}{`P'}{`S'},
+			\fourcc{`R'}{`O'}{`O'}{`T'}, \fourcc{`S'}{`K'}{`E'}{`L'} \\
+		\hline
+		\fourcc{`P'}{`I'}{`M'}{`G'} & \hex{474d4950} & Paged Image %
+			& \fourcc{`P'}{`G'}{`T'}{`B'} \\
+		\hline
+		\fourcc{`p'}{`r'}{`l'}{`t'} & \hex{746c7270} & Portal Manifest %
+			& \fourcc{`m'}{`f'}{`s'}{`t'} \\
+		\hline
+		\fourcc{`C'}{`I'}{`N'}{`P'} & \hex{504e4943} & Scene %
+			& \fourcc{`C'}{`S'}{`C'}{`N'} \\
+		\hline
+		\fourcc{`A'}{`M'}{`S'}{`P'} & \hex{50534d41} & Script %
+			& \fourcc{`A'}{`M'}{`S'}{`P'} \\
+		\hline
+		\fourcc{`t'}{`x'}{`t'}{`m'} & \hex{6d747874} & Text Manifest %
+			& \fourcc{`t'}{`x'}{`t'}{`m'} \\
+		\hline
+		\fourcc{`t'}{`x'}{`t'}{`V'} & \hex{56747874} & Text Variant %
+			& \fourcc{`v'}{`a'}{`r'}{`i'} \\
+		\hline
+		\fourcc{`t'}{`x'}{`t'}{`v'} & \hex{76747874} & Text Voice %
+			& \fourcc{`t'}{`x'}{`t'}{`v'} \\
+		\hline
+	\end{tabular}
+\end{center}\end{table}
+
