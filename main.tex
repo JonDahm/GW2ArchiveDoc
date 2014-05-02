@@ -5,7 +5,6 @@
 %\subtitle{Otherwise Known as the GW2.DAT File}
 
 \pagestyle{headings}
-\includeonly{notes,filerecords,filesandcompression,packfiles,appendixA}
 \usepackage[pdftex,colorlinks,%
             pdftitle={The Format of the Guild Wars 2 Archive File}%
 			]{hyperref}
@@ -17,20 +16,25 @@
 
 \begin{document}
 
+\frontmatter
 \maketitle
 \tableofcontents
 
 \include{notes}
 
+\mainmatter
 \include{filerecords}
 
 \include{filesandcompression}
 
-\include{generalfiles}
+\include{uncompressedfiles}
+
+\include{compressedfiles}
 
 \include{packfiles}
 
-\include{appendixA}
+\appendix
+\include{appendixstatichufftrees}
 
 \end{document}
 

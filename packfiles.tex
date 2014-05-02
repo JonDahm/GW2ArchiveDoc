@@ -12,8 +12,8 @@ it holds, as well as what data each subtype contains.
 
 Each Pack File begins with a 12-byte header identifying the type of data
 contained.  This header includes the 4-byte Character Code identifier labeling
-the file as a Pack File. The format of this header can be found in Table
-\ref{tab:pfheader}.
+the file as a Pack File. The format of this header can be found in
+\autoref{tab:pfheader}.
 
 \begin{table}[htp]\begin{center}
 	\caption{the Pack File header}
@@ -47,7 +47,7 @@ but their formats are different.
 
 Chunks begin with a 16-byte header describing where the next chunk is in the
 file and the type of data stored in this chunk.  The format can be found in
-Table \ref{tab:pfchunkheader}.
+\autoref{tab:pfchunkheader}.
 
 \begin{table}[htp]\begin{center}
 	\caption{the Chunk header}
@@ -71,7 +71,7 @@ Table \ref{tab:pfchunkheader}.
 	\end{tabular}
 \end{center}\end{table}
 
-In Table \ref{tab:pftypes} you will find all the known Pack File types, as well
+In \autoref{tab:pftypes} you will find all the known Pack File types, as well
 as the chunks each one contains.  The following sections will go into each chunk
 and its format.
 
@@ -183,25 +183,25 @@ and its format.
 	\end{tabular}
 \end{center}\end{table}
 
-\input{packfile_anic}
-\input{packfile_ASND}
-\input{packfile_ABNK}
-\input{packfile_ABIX}
-\input{packfile_cmaC}
-\input{packfile_cmpc}
-\input{packfile_cntc}
-\input{packfile_emoc}
-\input{packfile_eula}
-\input{packfile_hvkC}
-\input{packfile_mapc}
-\input{packfile_mMet}
-\input{packfile_mpsd}
-\input{packfile_AMAT}
-\input{packfile_MODL}
-\input{packfile_PIMG}
-\input{packfile_prlt}
-\input{packfile_CINP}
-\input{packfile_AMSP}
-\input{packfile_txtm}
-\input{packfile_txtV_txtv}
+\input{PackFileTypes/anic}
+\input{PackFileTypes/ASND}
+\input{PackFileTypes/ABNK}
+\input{PackFileTypes/ABIX}
+\input{PackFileTypes/cmaC}
+\input{PackFileTypes/cmpc}
+\input{PackFileTypes/cntc}
+\input{PackFileTypes/emoc}
+\input{PackFileTypes/eula}
+\input{PackFileTypes/hvkC}
+\input{PackFileTypes/mapc}
+\input{PackFileTypes/mMet}
+\input{PackFileTypes/mpsd}
+\input{PackFileTypes/AMAT}
+\input{PackFileTypes/MODL}
+\input{PackFileTypes/PIMG}
+\input{PackFileTypes/prlt}
+\input{PackFileTypes/CINP}
+\input{PackFileTypes/AMSP}
+\input{PackFileTypes/txtm}
+\input{PackFileTypes/txtV_txtv}
 

@@ -36,10 +36,10 @@ listed in decreasing order of frequency:
 	\hline
 \end{tabular}
 
-\section{Compression}
-\label{sec:compression}
+\section{File Compression}
+\label{sec:filecompression}
 
-Note to self: Add illustrations.
+TODO: Add illustrations.
 
 Compression is a difficult subject to describe tersely.  The compression used in
 the Archive is very similar to that produced by the DEFLATE algorithm.  If you
@@ -87,8 +87,8 @@ Huffman Trees presented in each block.
 Each tree can represent a variable number of values.  The first 16 bits are an
 unsigned value representing how many values this tree is giving Huffman codes
 to.  This is followed by a number of entries describing sometimes several codes
-at once.  These entries are compressed using predefined codes found in Appendix
-A.
+at once.  These entries are compressed using predefined codes found in
+\autoref{chap:statichuffmantrees}.
 
 Each entry represents at least one value and its code.  The first entry refers
 to the highest values the tree represents, with each successive entry referring
@@ -130,7 +130,7 @@ with that value.  If the value is greater than \hex{100}, then you have to copy
 previous output back into the stream.
 
 Following a copy code are additional bits that add to the length represented by
-the code itself.  Table \ref{tab:copylength} provides the base lengths for each
+the code itself.  \autoref{tab:copylength} provides the base lengths for each
 value and how many additional bits you must read and add to the base length.
 
 \begin{table}[htp]\begin{center}
@@ -166,7 +166,7 @@ value and how many additional bits you must read and add to the base length.
 \end{center}\end{table}
 
 After that is a code from the copy-offset alphabet.  This also has additional
-bits following it to add to it. Table \ref{tab:copyoffset} details the base
+bits following it to add to it. \autoref{tab:copyoffset} details the base
 offsets and the number of additional bits for each value.
 
 \begin{table}[htp]\begin{center}
