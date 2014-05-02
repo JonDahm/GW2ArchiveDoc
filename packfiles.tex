@@ -71,51 +71,71 @@ Table \ref{tab:pfchunkheader}.
 	\end{tabular}
 \end{center}\end{table}
 
-In table \ref{tab:pftypes} you will find all the known Pack File types, as well
+In Table \ref{tab:pftypes} you will find all the known Pack File types, as well
 as the chunks each one contains.  The following sections will go into each chunk
 and its format.
 
 \begin{table}[htp]\begin{center}
-	\caption{Pack File Types}
+	\caption{Pack File Types sorted by FourCC}
 	\label{tab:pftypes}
 	
 	\begin{tabular}{rrl|p{1.5in}}
 		\textbf{FourCC} & \textbf{Value} & \textbf{Name} & \textbf{Included Chunks} \\
 		\hline%\fourcc{`0'}{`0'}{`0'}{`0'}
-		\fourcc{`a'}{`n'}{`i'}{`c'} & \hex{63696E61} & Animation Sequence %
-			& \fourcc{`s'}{`e'}{`q'}{`n'} \\
-		\hline
-		\fourcc{`A'}{`S'}{`N'}{`D'} & \hex{444e5341} & Audio %
-			& \fourcc{`A'}{`S'}{`N'}{`D'} \\
-		\hline
-		\fourcc{`A'}{`B'}{`I'}{`X'} & \hex{58494241} & Bank Index %
+		\fourcc{`A'}{`B'}{`I'}{`X'} & \hex{58494241}
+			& \hyperref[sec:pfABIX]{Bank Index} %
 			& \fourcc{`B'}{`I'}{`D'}{`X'} \\
 		\hline
-		\fourcc{`A'}{`B'}{`N'}{`K'} & \hex{4b4e4241} & Bank %
+		\fourcc{`A'}{`B'}{`N'}{`K'} & \hex{4b4e4241}
+			& \hyperref[sec:pfABNK]{Bank} %
 			& \fourcc{`B'}{`K'}{`C'}{`K'} \\
 		\hline
-		\fourcc{`c'}{`m'}{`a'}{`C'} & \hex{43616d63} & Collide Model Manifest %
+		\fourcc{`A'}{`M'}{`A'}{`T'} & \hex{54414d41}
+			& \hyperref[sec:pfAMAT]{Material} %
+			& \fourcc{`G'}{`R'}{`M'}{`T'}, \fourcc{`D'}{`X'}{`9'}{`S'} \\
+		\hline
+		\fourcc{`A'}{`M'}{`S'}{`P'} & \hex{50534d41}
+			& \hyperref[sec:pfAMSP]{Script} %
+			& \fourcc{`A'}{`M'}{`S'}{`P'} \\
+		\hline
+		\fourcc{`a'}{`n'}{`i'}{`c'} & \hex{63696E61}
+			& \hyperref[sec:pfanic]{Animation Sequence} %
+			& \fourcc{`s'}{`e'}{`q'}{`n'} \\
+		\hline
+		\fourcc{`A'}{`S'}{`N'}{`D'} & \hex{444e5341}
+			& \hyperref[sec:pfASND]{Audio} %
+			& \fourcc{`A'}{`S'}{`N'}{`D'} \\
+		\hline
+		\fourcc{`C'}{`I'}{`N'}{`P'} & \hex{504e4943}
+			& \hyperref[sec:pfCINP]{Scene} %
+			& \fourcc{`C'}{`S'}{`C'}{`N'} \\
+		\hline
+		\fourcc{`c'}{`m'}{`a'}{`C'} & \hex{43616d63}
+			& \hyperref[sec:pfcmaC]{Collide Model Manifest} %
 			& \fourcc{`m'}{`a'}{`i'}{`n'} \\
 		\hline
-		\fourcc{`c'}{`m'}{`p'}{`c'} & \hex{63706d63} & Composite %
+		\fourcc{`c'}{`m'}{`p'}{`c'} & \hex{63706d63}
+			& \hyperref[sec:pfcmpc]{Composite} %
 			& \fourcc{`c'}{`o'}{`m'}{`p'} \\
 		\hline
-		\fourcc{`c'}{`n'}{`t'}{`c'} & \hex{63746e63} & Content Manifest %
+		\fourcc{`c'}{`n'}{`t'}{`c'} & \hex{63746e63}
+			& \hyperref[sec:pfcntc]{Content Manifest} %
 			& \fourcc{`M'}{`a'}{`i'}{`n'} \\
 		\hline
-		\fourcc{`e'}{`m'}{`o'}{`c'} & \hex{636f6d65} & Emote Animation %
+		\fourcc{`e'}{`m'}{`o'}{`c'} & \hex{636f6d65}
+			& \hyperref[sec:pfemoc]{Emote Animation} %
 			& \fourcc{`a'}{`n'}{`i'}{`m'} \\
 		\hline
-		\fourcc{`e'}{`u'}{`l'}{`a'} & \hex{616c7565} & EULA %
+		\fourcc{`e'}{`u'}{`l'}{`a'} & \hex{616c7565}
+			& \hyperref[sec:pfeula]{EULA} %
 			& \fourcc{`e'}{`u'}{`l'}{`a'} \\
 		\hline
-		\fourcc{`h'}{`v'}{`k'}{`C'} & \hex{436b7668} & Havok %
+		\fourcc{`h'}{`v'}{`k'}{`C'} & \hex{436b7668}
+			& \hyperref[sec:pfhvkC]{Havok} %
 			& \fourcc{`h'}{`a'}{`v'}{`k'} \\
 		\hline
-		\fourcc{`m'}{`M'}{`e'}{`t'} & \hex{74654d6d} & Map Metadata %
-			& \fourcc{`M'}{`a'}{`i'}{`n'} \\
-		\hline
-		\fourcc{`m'}{`a'}{`p'}{`c'} & \hex{6370616d} & Map %
+		\fourcc{`m'}{`a'}{`p'}{`c'} & \hex{6370616d}
+			& \hyperref[sec:pfmapc]{Map} %
 			& \fourcc{`a'}{`u'}{`d'}{`i'},    \fourcc{`m'}{`s'}{`n'}{\hex{00}},
 			\fourcc{`p'}{`a'}{`r'}{`m'},      \fourcc{`s'}{`h'}{`o'}{`r'},
 			\fourcc{`s'}{`u'}{`r'}{`f'},      \fourcc{`t'}{`r'}{`n'}{`i'},
@@ -126,38 +146,62 @@ and its format.
 			\fourcc{`s'}{`h'}{`e'}{`x'},      \fourcc{`t'}{`r'}{`n'}{\hex{00}},
 			\fourcc{`z'}{`o'}{`n'}{`2'} \\
 		\hline
-		\fourcc{`m'}{`p'}{`s'}{`d'} & \hex{6473706d} & Map Shadow %
-			& \fourcc{`s'}{`h'}{`a'}{`d'} \\
+		\fourcc{`m'}{`M'}{`e'}{`t'} & \hex{74654d6d}
+			& \hyperref[sec:pfmMet]{Map Metadata} %
+			& \fourcc{`M'}{`a'}{`i'}{`n'} \\
 		\hline
-		\fourcc{`A'}{`M'}{`A'}{`T'} & \hex{54414d41} & Material %
-			& \fourcc{`G'}{`R'}{`M'}{`T'}, \fourcc{`D'}{`X'}{`9'}{`S'} \\
-		\hline
-		\fourcc{`M'}{`O'}{`D'}{`L'} & \hex{4c444f4d} & Model %
+		\fourcc{`M'}{`O'}{`D'}{`L'} & \hex{4c444f4d}
+			& \hyperref[sec:pfMODL]{Model} %
 			& \fourcc{`A'}{`N'}{`I'}{`M'}, \fourcc{`M'}{`O'}{`D'}{`L'},
 			\fourcc{`G'}{`E'}{`O'}{`M'}, \fourcc{`P'}{`R'}{`P'}{`S'},
 			\fourcc{`R'}{`O'}{`O'}{`T'}, \fourcc{`S'}{`K'}{`E'}{`L'} \\
 		\hline
-		\fourcc{`P'}{`I'}{`M'}{`G'} & \hex{474d4950} & Paged Image %
+		\fourcc{`m'}{`p'}{`s'}{`d'} & \hex{6473706d}
+			& \hyperref[sec:pfmpsd]{Map Shadow} %
+			& \fourcc{`s'}{`h'}{`a'}{`d'} \\
+		\hline
+		\fourcc{`P'}{`I'}{`M'}{`G'} & \hex{474d4950}
+			& \hyperref[sec:pfPIMG]{Paged Image} %
 			& \fourcc{`P'}{`G'}{`T'}{`B'} \\
 		\hline
-		\fourcc{`p'}{`r'}{`l'}{`t'} & \hex{746c7270} & Portal Manifest %
+		\fourcc{`p'}{`r'}{`l'}{`t'} & \hex{746c7270}
+			& \hyperref[sec:pfprlt]{Portal Manifest} %
 			& \fourcc{`m'}{`f'}{`s'}{`t'} \\
 		\hline
-		\fourcc{`C'}{`I'}{`N'}{`P'} & \hex{504e4943} & Scene %
-			& \fourcc{`C'}{`S'}{`C'}{`N'} \\
-		\hline
-		\fourcc{`A'}{`M'}{`S'}{`P'} & \hex{50534d41} & Script %
-			& \fourcc{`A'}{`M'}{`S'}{`P'} \\
-		\hline
-		\fourcc{`t'}{`x'}{`t'}{`m'} & \hex{6d747874} & Text Manifest %
+		\fourcc{`t'}{`x'}{`t'}{`m'} & \hex{6d747874}
+			& \hyperref[sec:pftxtm]{Text Manifest} %
 			& \fourcc{`t'}{`x'}{`t'}{`m'} \\
 		\hline
-		\fourcc{`t'}{`x'}{`t'}{`V'} & \hex{56747874} & Text Variant %
+		\fourcc{`t'}{`x'}{`t'}{`V'} & \hex{56747874}
+			& \hyperref[sec:pftxtV]{Text Variant} %
 			& \fourcc{`v'}{`a'}{`r'}{`i'} \\
 		\hline
-		\fourcc{`t'}{`x'}{`t'}{`v'} & \hex{76747874} & Text Voice %
+		\fourcc{`t'}{`x'}{`t'}{`v'} & \hex{76747874}
+			& \hyperref[sec:pftxtv]{Text Voice} %
 			& \fourcc{`t'}{`x'}{`t'}{`v'} \\
 		\hline
 	\end{tabular}
 \end{center}\end{table}
+
+\input{packfile_anic}
+\input{packfile_ASND}
+\input{packfile_ABNK}
+\input{packfile_ABIX}
+\input{packfile_cmaC}
+\input{packfile_cmpc}
+\input{packfile_cntc}
+\input{packfile_emoc}
+\input{packfile_eula}
+\input{packfile_hvkC}
+\input{packfile_mapc}
+\input{packfile_mMet}
+\input{packfile_mpsd}
+\input{packfile_AMAT}
+\input{packfile_MODL}
+\input{packfile_PIMG}
+\input{packfile_prlt}
+\input{packfile_CINP}
+\input{packfile_AMSP}
+\input{packfile_txtm}
+\input{packfile_txtV_txtv}
 
