@@ -137,30 +137,31 @@ value and how many additional bits you must read and add to the base length.
 	\label{tab:copylength}
 	
 	\begin{tabular}{|r|r|r|c|r|r|r|}
-		\hline
+		\cline{1-3}\cline{5-7}
 		\textbf{Code} & \textbf{Base} & \textbf{Additional Bits} & & %
 		\textbf{Code} & \textbf{Base} & \textbf{Additional Bits} \\
-		\hline
+		\cline{1-3}\cline{5-7}
 		\hex{100} &  1 & 0 & & \hex{110} &  33 & 3 \\
 		\hex{101} &  2 & 0 & & \hex{111} &  41 & 3 \\
 		\hex{102} &  3 & 0 & & \hex{112} &  49 & 3 \\
 		\hex{103} &  4 & 0 & & \hex{113} &  57 & 3 \\
-		\hline
+		\cline{5-7}
 		\hex{104} &  5 & 0 & & \hex{114} &  65 & 4 \\
 		\hex{105} &  6 & 0 & & \hex{115} &  81 & 4 \\
 		\hex{106} &  7 & 0 & & \hex{116} &  97 & 4 \\
 		\hex{107} &  8 & 0 & & \hex{117} & 113 & 4 \\
-		\hline
+		\cline{1-3}\cline{5-7}
 		\hex{108} &  9 & 1 & & \hex{118} & 129 & 5 \\
 		\hex{109} & 11 & 1 & & \hex{119} & 161 & 5 \\
 		\hex{10A} & 13 & 1 & & \hex{11A} & 193 & 5 \\
 		\hex{10B} & 15 & 1 & & \hex{11B} & 225 & 5 \\
-		\hline
+		\cline{1-3}\cline{5-7}
 		\hex{10C} & 17 & 2 & & \hex{11C} & 256 & 0 \\
-		\hex{10D} & 21 & 2 & & & & \\
-		\hex{10E} & 25 & 2 & & & & \\
-		\hex{10F} & 29 & 2 & & & & \\
-		\hline
+		\cline{5-7}
+		\hex{10D} & 21 & 2 & \multicolumn{4}{c}{} \\
+		\hex{10E} & 25 & 2 & \multicolumn{4}{c}{} \\
+		\hex{10F} & 29 & 2 & \multicolumn{4}{c}{} \\
+		\cline{1-3}
 	\end{tabular}
 \end{center}\end{table}
 
@@ -173,29 +174,36 @@ offsets and the number of additional bits for each value.
 	\label{tab:copyoffset}
 	
 	\begin{tabular}{|r|r|r|c|r|r|r|}
-		\hline
+		\cline{1-3}\cline{5-7}
 		\textbf{Code} & \textbf{Base} & \textbf{Additional Bits} & & %
 		\textbf{Code} & \textbf{Base} & \textbf{Additional Bits} \\
-		\hline
+		\cline{1-3}\cline{5-7}
 		\hex{0}  &   \hex{1} & 0 & & \hex{12} &   \hex{201} &  8 \\
 		\hex{1}  &   \hex{2} & 0 & & \hex{13} &   \hex{301} &  8 \\
 		\hex{2}  &   \hex{3} & 0 & & \hex{14} &   \hex{401} &  9 \\
 		\hex{3}  &   \hex{4} & 0 & & \hex{15} &   \hex{601} &  9 \\
+		\cline{5-7}
 		\hex{4}  &   \hex{5} & 1 & & \hex{16} &   \hex{801} & 10 \\
 		\hex{5}  &   \hex{7} & 1 & & \hex{17} &   \hex{C01} & 10 \\
+		\cline{1-3}
 		\hex{6}  &   \hex{9} & 2 & & \hex{18} &  \hex{1001} & 11 \\
 		\hex{7}  &   \hex{D} & 2 & & \hex{19} &  \hex{1801} & 11 \\
+		\cline{5-7}
 		\hex{8}  &  \hex{11} & 3 & & \hex{1A} &  \hex{2001} & 12 \\
 		\hex{9}  &  \hex{19} & 3 & & \hex{1B} &  \hex{3001} & 12 \\
+		\cline{1-3}
 		\hex{A}  &  \hex{21} & 4 & & \hex{1C} &  \hex{4001} & 13 \\
 		\hex{B}  &  \hex{31} & 4 & & \hex{1D} &  \hex{6001} & 13 \\
+		\cline{5-7}
 		\hex{C}  &  \hex{41} & 5 & & \hex{1E} &  \hex{8001} & 14 \\
 		\hex{D}  &  \hex{61} & 5 & & \hex{1F} &  \hex{C001} & 14 \\
+		\cline{1-3}
 		\hex{E}  &  \hex{81} & 6 & & \hex{20} & \hex{10001} & 15 \\
 		\hex{F}  &  \hex{C1} & 6 & & \hex{21} & \hex{18001} & 15 \\
-		\hex{10} & \hex{101} & 7 & & & & \\
-		\hex{11} & \hex{181} & 7 & & & & \\
-		\hline
+		\cline{5-7}
+		\hex{10} & \hex{101} & 7 & \multicolumn{4}{c}{} \\
+		\hex{11} & \hex{181} & 7 & \multicolumn{4}{c}{} \\
+		\cline{1-3}
 	\end{tabular}
 \end{center}\end{table}
 
