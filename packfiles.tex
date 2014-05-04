@@ -15,25 +15,12 @@ contained.  This header includes the 4-byte Character Code identifier labeling
 the file as a Pack File. The format of this header can be found in
 \autoref{tab:pfheader}.
 
-\begin{table}[htp]\begin{center}
-	\caption{the Pack File header}
-	\label{tab:pfheader}
-	
-	\begin{tabular}{|r|r|l|p{2.5in}|}
-		\hline
-		\textbf{Byte} & \textbf{Size} & \textbf{Value} & \textbf{Description} \\
-		\hline
-		0 & 2 & Identifier  & Always ['P','F'] \\
-		\hline
-		2 & 4 & Unknown     & Always \hex{1} \\
-		\hline
-		6 & 2 & Header Size & Always 12 \\
-		\hline
-		8 & 4 & Type        & 4 Character Codes defining the data held in this
-		                      Pack File. \\
-		\hline
-	\end{tabular}
-\end{center}\end{table}
+\begin{datastructure}{htp}{the Pack File header}{pfheader}
+	\field{char[2]}{Identifier}{Always [`P',`F']}
+	\field{uint32}{Unknown}{Always \hex{01}}
+	\field{uint16}{Header Size}{Always 12}
+	\field{FourCC}{Type}{4 Character Codes defining the data held in this Pack File.}
+\end{datastructure}
 
 Each Pack File is split into blocks of data, called Chunks.  The first chunk
 follows immediately after the Pack File header.  Each one contains a pointer
@@ -49,27 +36,14 @@ Chunks begin with a 16-byte header describing where the next chunk is in the
 file and the type of data stored in this chunk.  The format can be found in
 \autoref{tab:pfchunkheader}.
 
-\begin{table}[htp]\begin{center}
-	\caption{the Chunk header}
-	\label{tab:pfchunkheader}
-	
-	\begin{tabular}{|r|r|l|p{2.5in}|}
-		\hline
-		\textbf{Byte} & \textbf{Size} & \textbf{Value} & \textbf{Description} \\
-		\hline
-		 0 & 4 & Identifier      & Type of Chunk \\
-		\hline
-		 4 & 4 & Next Chunk      & Number of bytes after the end of this value
-		                           the next chunk appears. \\
-		\hline
-		 8 & 2 & Unknown         & \\
-		\hline
-		10 & 2 & Header Size     & Always 12 \\
-		\hline
-		12 & 4 & Unknown Pointer & A pointer to an unknown data structure. \\
-		\hline
-	\end{tabular}
-\end{center}\end{table}
+\begin{datastructure}{htp}{the Chunk header}{pfchunkheader}
+	\field{FourCC}{Identifier}{Type of Chunk}
+	\field{uint32}{Next Chunk}{Number of bytes after the end of this field that%
+	                           the next chunk appears}
+	\field{uint16}{Unknown}{}
+	\field{uint16}{Header Size}{Always 12}
+	\field{Ptr\tmpl{?}}{Unknown}{Pointer to an unknown data structure}
+\end{datastructure}
 
 In \autoref{tab:pftypes} you will find all the known Pack File types, as well
 as the chunks each one contains.  The following sections will go into each chunk
@@ -182,6 +156,44 @@ and its format.
 		\hline
 	\end{tabular}
 \end{center}\end{table}
+
+\section{Common Structures}
+\label{sec:pfcommonstructures}
+Before we go into the different Pack File types and their formats, we should go
+over some common structures found in the pack files.  There are three basic
+structures and three others that build off of them.
+
+We'll start with the Pointer.  In the documentation, we'll shorten it to Ptr for
+brevity.  This structure consists of one 32-bit offset that references data
+elsewhere in the file.  The address of the data referenced is the address of the
+Ptr plus the offset.
+
+The next basic structure is the Array -- shortened to Arr.  It is simply one
+data type T repeated N times.  It will be written as Arr\tmpl{T,N}, T being the
+data type and N being the number of data types.  It takes up $size(T)*N$ bytes.
+
+The last basic structure is the File Reference -- shortened to FileRef.  It
+occupies 6 bytes, but only 4 of those bytes are useful information.  According
+to Johan Sköld, this structure represents a File ID, and it is only valid if the
+first two 16-bit values are both above \hex{100}.  In his project, he calculates
+the File ID as $first - \hex{FF} + (second - \hex{100}) * \hex{FF00}$.
+\emph{More research must be done into whether this equation is correct.}
+
+Moving on to composite structures, the first we'll discuss is the String and
+Wide String -- shortened to Str and WStr, respectively.  These are simply Ptrs
+to C Strings using either traditional or wide characters, but are common enough
+that they warrant their own listing here.
+
+The next composite structure is the Vector -- shortened to Vtr.  This is similar
+to an array, but the size is determined at run time and not at compile time, and
+it always takes up 8 bytes regardless of the number of elements it represents.
+The first 32-bit value in this structure, N, is the number of elements in the
+Vector. The second is a Pointer of type Ptr\tmpl{Arr\tmpl{T,N}}, where T is the
+data type represented by the Vector.
+
+The last composite structure we'll discuss is the Reference List -- shortened
+to RefList.  This is a Vtr of pointers to data types.  It is equivalent to
+Vtr\tmpl{Ptr\tmpl{T}}, where T is the data type we're pointing to.
 
 \input{PackFileTypes/anic}
 \input{PackFileTypes/ASND}

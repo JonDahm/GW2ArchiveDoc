@@ -1,6 +1,24 @@
 \section{Bank Pack File}
 \label{sec:pfABNK}
 
-TODO: Finish this section
+This type has only one chunk, whose FourCC is \fourcc{`B'}{`K'}{`C'}{`K'}.  It
+has 3 fields, as documented in \autoref{tab:pfABNKchunkBKCK}.
 
+\begin{datastructure}{h}{the BKCK chunk format}{pfABNKchunkBKCK}
+	\field{byte[16]}{(unknown)}{}
+	\field{Vtr\tmpl{Sound}}{Sounds (see \autoref{tab:pfABNKsound})}{}
+	\field{Ptr\tmpl{byte[16]}}{(unknown)}{}
+\end{datastructure}
+
+\begin{datastructure}{h}{the Sound structure format (ABNK)}{pfABNKsound}
+	\field{uint32}{Voice ID}{}
+	\field{uint32}{Flags}{}
+	\field{byte[16]}{(unknown)}{}
+	\field{float32}{Length}{}
+	\field{float32}{Offset}{}
+	\field{byte[16]}{(unknown)}{}
+	\field{Vtr\tmpl{byte}}{Audio Data}{}
+\end{datastructure}
+
+TODO: Research the purpose of these fields and this file.
 

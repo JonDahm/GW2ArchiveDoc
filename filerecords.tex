@@ -14,41 +14,21 @@ The Archive begins with a 40-byte header which describes some of the properties
 of the Archive and points to the Main File Table.  The format of this header
 can be found in \autoref{tab:archhead}.
 
-\begin{table}[htp]\begin{center}
-	\caption{the Archive header}
-	\label{tab:archhead}
-	
-	\begin{tabular}{|r|r|l|p{2.5in}|}
-		\hline
-		\textbf{Byte} & \textbf{Size} & \textbf{Value} & \textbf{Description} \\
-		\hline
-		 0 & 1 & Version     & Version of the Archive. Seems to always be \hex{97}  \\
-		\hline
-		 1 & 3 & Identifier  & Identifies this file as the Archive file, as
-		                       opposed to a MS Word file.  Always
-							   [\hex{45},\hex{4E},\hex{1A}].  \\
-		\hline
-		 4 & 4 & Header Size & Size of this header.  Always 40.  \\
-		\hline
-		 8 & 4 & (unknown)   & Always \hex{CABA0001}.  \\
-		\hline
-		12 & 4 & Chunk Size  & Size of each chunk in the file.  Always 512.  \\
-		\hline
-		16 & 4 & (unknown)\footnote{In the GW1 Archive, this was the CRC-32 value
-									of the first 16 bytes of the header.} %
-							 & Always \hex{8ED0A720}.  \\
-		\hline
-		20 & 4 & (unknown)   & Always \hex{00040002}.  \\
-		\hline
-		24 & 8 & MFT Offset  & The offset from the beginning of the Archive to
-		                       the Main File Table.  \\
-		\hline
-		32 & 4 & MFT Size    & Size of the Main File Table in bytes.  \\
-		\hline
-		36 & 4 & (unknown)   & Always 0. \\
-		\hline
-	\end{tabular}
-\end{center}\end{table}
+\begin{datastructure}{htp}{the Archive header}{archhead}
+	\field{FourCC}{Identifier}{Identifies this file as the Archive. Always%
+	                           \fourcc{\hex{97}}{`A'}{`N'}{\hex{1A}}.}
+	\field{uint32}{Header Size}{Always 40.}
+	\field{uint32}{(unknown)  }{Always \hex{CABA~0001}.}
+	\field{uint32}{Chunk Size }{Size of each chunk in the file. Always 512.}
+	\field{uint32}{(unknown)  }{Always \hex{8ED0~A720}.}%\footnotemark}
+	\field{uint32}{(unknown)  }{}
+	\field{uint64}{MFT Offset }{The offset from the beginning of the Archive to%
+	                            the Main File Table.}
+	\field{uint32}{MFT Size   }{Size of the Main File Table in bytes.}
+	\field{uint32}{(unknown)  }{Always \hex{0000~0000}.}
+	%\footnotetext{In the GW1 Archive, this was the CRC-32 value of the first%
+	%16 bytes of the header.}
+\end{datastructure}
 
 \section{The Main File Table}
 \label{sec:mft}
@@ -62,77 +42,38 @@ metadata.  The entries are not listed in any particular order.  See
 
 The first fifteen entries in the MFT are reserved for special files in the
 Archive.  They are documented below:
-\\
 
-\begin{tabular}{rl}
-	\hline
-	1     & Archive Header  \\
-	2     & File ID Table (See \autoref{sec:fidtab}) \\
-	3     & MFT (self reference)  \\
-	4--15 & Blank Entries  \\
-	\hline
-\end{tabular}
+\begin{valuetable}
+	\valueDesc{1}{Archive Header}
+	\valueDesc{2}{File ID Table (see \autoref{sec:fidtab})}
+	\valueDesc{3}{MFT (self reference)}
+	\valueDesc{4--15}{Reserved Entries (blank)}
+\end{valuetable}
 
-\begin{table}[htbp]\begin{center}
-	\caption{the MFT header}
-	\label{tab:mfthead}
-	
-	\begin{tabular}{|r|r|l|p{2.5in}|}
-		\hline
-		\textbf{Byte} & \textbf{Size} & \textbf{Value} & \textbf{Description} \\
-		\hline
-		 0 & 4 & Identifier & Identifies the start of the MFT.  Always
-		                      \fourcc{`M'}{`f'}{`t'}{\hex{1A}}.  \\
-		\hline
-		 4 & 8 & (unknown)  & \\
-		\hline
-		12 & 4 & Length     & Number of entries in the table plus one.  \\
-		\hline
-		16 & 8 & (unknown)  & Always 0.  \\
-		\hline
-	\end{tabular}
-\end{center}\end{table}
+\begin{datastructure}{htbp}{the MFT header}{mfthead}
+	\field{FourCC}{Identifier}{Always \fourcc{`M'}{`f'}{`t'}{\hex{1A}}.}
+	\field{uint64}{(unknown)}{}
+	\field{uint32}{Length}{Number of entries in the table plus one.}
+	\field{uint64}{(unknown)}{Always \hex{0000~0000}.}
+\end{datastructure}
 
-\begin{table}[htbp]\begin{center}
-	\caption{an MFT entry}
-	\label{tab:mftent}
-	
-	\begin{tabular}{|r|r|l|p{2.5in}|}
-		\hline
-		\textbf{Byte} & \textbf{Size} & \textbf{Value} & \textbf{Description} \\
-		\hline
-		 0 & 8 & Offset        & Offset from the beginning of the Archive to the
-		                         start of the file.  \\
-		\hline
-		 8 & 4 & Archived Size & Size in bytes of the file within the archive.  \\
-		\hline
-		12 & 2 & Compression   & Type of compression the file is under.  See below.  \\
-		\hline
-		14 & 2 & Flags         & Other flags.  See below.  \\
-		\hline
-		16 & 4 & (unknown)     & Always 0.  \\
-		\hline
-		20 & 4 & (unknown)     & Always \hex{4867~4BC7}.  \\
-		\hline
-	\end{tabular}
-	
-	Valid values for Compression:
-	\begin{tabular}{rl}
-		\hline
-		0 & Uncompressed \\
-		8 & Huffman Compression \\
-		\hline
-	\end{tabular}
-	\\
-	
-	Valid values for Flags:
-	\begin{tabular}{rl}
-		\hline
-		1 & In Use \\
-		2 & (unknown) \\
-		\hline
-	\end{tabular}
-\end{center}\end{table}
+\begin{datastructure}{htbp}{an MFT entry}{mftent}
+	\field{uint64}{Location}{Offset from the beginning of the Archive to the%
+	                         start of the file.}
+	\field{uint32}{Archived Size}{Size in bytes of the file within the archive.}
+	\field{uint16}{Compression}{Type of compression the file is under. See below.}
+	\field{uint16}{Flags}{Other details about the file. See below.}
+	\field{uint32}{(unknown)}{Always \hex{0000~0000}.}
+	\field{uint32}{(unknown)}{Always \hex{4867~4BC7}.}
+
+\valuesubtable{Compression}
+	\valueDesc{0}{Uncompressed}
+	\valueDesc{8}{Huffman Compressed}
+
+\valuesubtable{Flags}
+	\valueDesc{1}{In use}
+	\valueDesc{2}{(unknown)}
+\end{datastructure}
 
 
 \section{The File ID Table}
@@ -152,18 +93,8 @@ found a significant number of these, but they exist.  I have only found entries
 where both fields are nil, and none where only one was nil.  My recommendation
 is to discard any entries with nil fields.
 
-\begin{table}[htbp]\begin{center}
-	\caption{a File ID Table entry}
-	\label{tab:fident}
-
-	\begin{tabular}{|r|r|l|p{2in}|}
-		\hline
-		\textbf{Byte} & \textbf{Size} & \textbf{Value} & \textbf{Description}
-		\\\hline
-		0 & 4 & File ID         &
-		\\\hline
-		4 & 4 & MFT Entry Index & Indices start at 1
-		\\\hline
-	\end{tabular}
-\end{center}\end{table}
+\begin{datastructure}{htbp}{a File ID Table entry}{fident}
+	\field{uint32}{File ID}{}
+	\field{uint32}{MFT Entry Index}{Indices start at 1}
+\end{datastructure}
 

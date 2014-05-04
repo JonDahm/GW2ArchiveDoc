@@ -1,4 +1,4 @@
-\documentclass[11pt]{book}
+\documentclass[11pt,titlepage,oneside,openany]{book}
 
 \author{Jon~Dahm}
 \title{The Format of the Guild Wars 2 Archive File}
@@ -10,16 +10,34 @@
 			]{hyperref}
 \usepackage{longtable}
 
+% General formatting:
 \newcommand{\fourcc}[4]{\texttt{[#1,#2,#3,#4]}}
 \newcommand{\hex}[1]{\texttt{#1$_x$}}
 \newcommand{\bin}[1]{\texttt{#1$_b$}}
+\newcommand{\tmpl}[1]{\textless{}#1\textgreater{}}
+
+% For documenting Data Structures:
+\newcommand{\field}[3]{\hline #1 & #2 & #3 \\}
+\newenvironment{datastructure}[3]%
+{ \begin{table}[#1]\begin{center}\caption{#2}\label{tab:#3}%
+  \begin{tabular}{|r|p{1in}|p{2.5in}|}%
+  \hline \textbf{Type} & \textbf{Name} & \textbf{Description} \\%
+}%
+{ \hline\end{tabular}\end{center}\end{table} }
+
+% For documenting specific values:
+\newcommand{\valueDesc}[2]{#1 & #2 \\}
+\newcommand{\valuesubtable}[1]{%
+  \hline\end{tabular}\\Valid values for #1:\\\begin{tabular}{rl}\hline}
+\newenvironment{valuetable}%
+{ \begin{tabular}{rl}\hline }%
+{ \hline\end{tabular} }
 
 \begin{document}
 
 \frontmatter
 \maketitle
 \tableofcontents
-
 \include{notes}
 
 \mainmatter
