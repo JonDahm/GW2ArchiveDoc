@@ -1,7 +1,272 @@
 \section{Script Pack File}
 \label{sec:pfAMSP}
 
-TODO: Finish this section
+This Pack File has only one chunk, whose FourCC is \fourcc{`A'}{`M'}{`S'}{`P'}.
+However, there is a lot of data in that single chunk, with 22 different
+structures included in it.  See \autoref{tab:pfAMSPchunkAMSP} for the chunk's
+format.
 
+\begin{datastructure}{hp}{the AMSP chunk format.}{pfAMSPchunkAMSP}
+	\field{uint64}{Music Cue}{}
+	\field{uint64}{Reverb Override}{}
+	\field{uint64}{Snapshot}{}
+	\field{Ptr\tmpl{AudioSettings}}{Audio Settings}{(see \autoref{tab:pfAMSPaudiosettings})}
+	\field{Vtr\tmpl{Handler}}{Handlers}{(see \autoref{tab:pfAMSPhandler})}
+	\field{Vtr\tmpl{MetaSoundData}}{Meta Sound Data}{(see \autoref{tab:pfAMSPmetasounddata})}
+	\field{Vtr\tmpl{ScriptRef}}{Script References}{(see \autoref{tab:pfAMSPscriptref})}
+	\field{Vtr\tmpl{TriggerKey}}{Trigger Keys}{(see \autoref{tab:pfAMSPtriggerkey})}
+	\field{uint32}{Flags}{}
+	\field{uint32}{Sound Pool Count}{}
+	\field{float32}{Fade-in Time}{}
+	\field{float32}{Sound Pool Delay}{}
+	\field{float32}{Volume}{}
+	\field{byte}{Music Cue Priority}{}
+	\field{byte}{Music Mute Priority}{}
+\end{datastructure}
 
+%\clearpage
+
+\begin{datastructure}{p}{the AudioSettings structure}{pfAMSPaudiosettings}
+	\field{uint64}{Default Snapshot}{}
+	\field{uint64}{Effects Bus}{}
+	\field{float32}{Distance Scale}{}
+	\field{float32}{Doppler Scale}{}
+	\field{float32}{Focus Transition}{}
+	\field{Vtr\tmpl{BusData}}{Busses}{(see \autoref{tab:pfAMSPbusdata})}
+	\field{Vtr\tmpl{Category}}{Categories}{(see \autoref{tab:pfAMSPcategory})}
+	\field{Vtr\tmpl{MusicCondition}}{Music Conditions}{(see \autoref{tab:pfAMSPmusiccondition})}
+	\field{Vtr\tmpl{Playlist}}{Playlists}{(see \autoref{tab:pfAMSPplaylist})}
+	\field{Vtr\tmpl{Reverb}}{Reverbs}{(see \autoref{tab:pfAMSPreverb})}
+	\field{Vtr\tmpl{Snapshot}}{Snapshots}{(see \autoref{tab:pfAMSPsnapshot})}
+	\field{Ptr\tmpl{FileRef}}{Bank Index File}{}
+	\field{Ptr\tmpl{FileRef}}{Bank Script File}{}
+	\field{Ptr\tmpl{FileRef}}{Music Script File}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the BusData structure}{pfAMSPbusdata}
+	\field{uint64}{ID}{}
+	\field{uint32}{Flags}{}
+	\field{uint64}{Output}{}
+	\field{Ptr\tmpl{BusDynamicData}}{Dynamic Data}{(see \autoref{tab:pfAMSPbusdynamicdata})}
+\end{datastructure}
+
+%\clearpage
+
+\begin{datastructure}{p}{the BusDynamicData structure}{pfAMSPbusdynamicdata}
+	\field{uint64}{ID}{}
+	\field{uint32}{Flags}{}
+	\field{float32}{Volume}{}
+	\field{Vtr\tmpl{DSPData}}{DSP Data}{(see \autoref{tab:pfAMSPdspdata})}
+\end{datastructure}
+
+\begin{datastructure}{p}{the DSPData structure}{pfAMSPdspdata}
+	\field{uint32}{Type}{}
+	\field{uint32}{Flags}{}
+	\field{Vtr\tmpl{float32}}{Properties}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the Category structure}{pfAMSPcategory}
+	\field{uint64}{ID}{}
+	\field{uint64}{Volume Group ID}{}
+	\field{uint64}{Output Bus ID}{}
+	\field{Ptr\tmpl{Attenuation}}{Attenuation}{(see \autoref{tab:pfAMSPattenuation})}
+	\field{Ptr\tmpl{CategoryDynamicData}}{Dynamic Data}{(see \autoref{tab:pfAMSPcategorydynamicdata})}
+	\field{float32}{Mute Fade Time}{}
+	\field{uint32}{Flags}{}
+	\field{uint32}{Max Audible}{}
+	\field{byte}{Max Audible Behavior}{}
+\end{datastructure}
+
+%\clearpage
+
+\begin{datastructure}{p}{the Attenuation structure}{pfAMSPattenuation}
+	\field{float32}{Doppler}{}
+	\field{DynamicParamData}{Low Pass}{(see \autoref{tab:pfAMSPdynamicparamdata})}
+	\field{DynamicParamData}{High Pass}{}
+	\field{DynamicParamData}{Pan 3D}{}
+	\field{DynamicParamData}{Reverb}{}
+	\field{DynamicParamData}{Spread 3D}{}
+	\field{DynamicParamData}{Volume A}{}
+	\field{DynamicParamData}{Volume B}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the DynamicParamData structure}{pfAMSPdynamicparamdata}
+	\field{Ptr\tmpl{Envelope}}{Envelope}{(see \autoref{tab:pfAMSPenvelope})}
+	\field{Ptr\tmpl{RandomParam}}{Random Param}{(see \autoref{tab:pfAMSPrandomparam})}
+	\field{float32}{Value}{}
+	\field{byte}{Type}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the Envelope structure}{pfAMSPenvelope}
+	\field{uint64}{Offset Parameter}{}
+	\field{Vtr\tmpl{EnvelopePoint}}{Envelope Points}{(see \autoref{tab:pfAMSPenvelopepoint})}
+	\field{byte}{Offset Type}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the EnvelopePoint structure}{pfAMSPenvelopepoint}
+	\field{float32}{Offset}{}
+	\field{float32}{Value}{}
+\end{datastructure}
+
+%\clearpage
+
+\begin{datastructure}{p}{the RandomParam structure}{pfAMSPrandomparam}
+	\field{RangeData}{Time}{(see \autoref{tab:pfAMSPrangedata})}
+	\field{RangeData}{Value}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the RangeData structure}{pfAMSPrangedata}
+	\field{float32}{Max}{}
+	\field{float32}{Min}{}
+	\field{byte}{Min (byte)}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the CategoryDynamicData structure}{pfAMSPcategorydynamicdata}
+	\field{uint64}{ID}{}
+	\field{float32}{Volume}{}
+	\field{float32}{Non-Focus Gain}{}
+	\field{float32}{Low Pass}{}
+	\field{float32}{High Pass}{}
+	\field{float32}{Reverb Direction}{}
+	\field{float32}{Reverb Room}{}
+	\field{uint32}{Flags}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the MusicCondition structure}{pfAMSPmusiccondition}
+	\field{uint64}{ID}{}
+	\field{uint32}{Flag}{}
+	\field{Vtr\tmpl{byte}}{Byte Code}{}
+\end{datastructure}
+
+%\clearpage
+
+\begin{datastructure}{p}{the Playlist structure}{pfAMSPplaylist}
+	\field{uint64}{Category}{}
+	\field{uint64}{ID}{}
+	\field{uint64}{Primary Playlist ID}{}
+	\field{uint64}{Secondary Playlist ID}{}
+	\field{Vtr\tmpl{FileNameData}}{Files}{(see \autoref{tab:pfAMSPfilenamedata})}
+	\field{float32}{Fade-In Time}{}
+	\field{float32}{Fade-Out Time}{}
+	\field{uint32}{Flags}{}
+	\field{RangeData}{Initial Silence}{}
+	\field{RangeData}{Interval Silence}{}
+	\field{RangeData}{Max Play Length}{}
+	\field{DynamicParamData}{Volume}{}
+	\field{byte}{File Iterate Mode}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the FileNameData structure}{pfAMSPfilenamedata}
+	\field{uint64}{Condition}{}
+	\field{uint64}{Language}{}
+	\field{float32}{Volume}{}
+	\field{float32}{Weight}{}
+	\field{Ptr\tmpl{FileRef}}{File}{}
+	\field{byte}{Audio Type}{}
+	\field{byte}{Note Base}{}
+	\field{byte}{Note Min}{}
+	\field{byte}{Note Max}{}
+\end{datastructure}
+
+%\clearpage
+
+\begin{datastructure}{p}{the Reverb structure}{pfAMSPreverb}
+	\field{uint64}{ID}{}
+	\field{uint32}{Flags}{}
+	\field{float32}{Room}{}
+	\field{float32}{Room HF}{}
+	\field{float32}{Room LF}{}
+	\field{float32}{Decay Time}{}
+	\field{float32}{Decay HF Ratio}{}
+	\field{float32}{Reflections}{}
+	\field{float32}{Reflections Delay}{}
+	\field{float32}{Reverb}{}
+	\field{float32}{Reverb Delay}{}
+	\field{float32}{Reference HF}{}
+	\field{float32}{Reference LF}{}
+	\field{float32}{Diffusion}{}
+	\field{float32}{Density}{}
+	\field{float32}{Echo Delay}{}
+	\field{float32}{Echo Decay Ration}{}
+	\field{float32}{Echo Wet Mix}{}
+	\field{float32}{Echo Dry Mix}{}
+\end{datastructure}
+
+\clearpage
+
+\begin{datastructure}{p}{the Snapshot structure}{pfAMSPsnapshot}
+	\field{uint64}{ID}{}
+	\field{float32}{Blend-In Time}{}
+	\field{float32}{Blend-Out Time}{}
+	\field{uint32}{Flags}{}
+	\field{Vtr\tmpl{BusDynamicData}}{Busses}{(see \autoref{tab:pfAMSPbusdynamicdata})}
+	\field{Vtr\tmpl{CategoryDynamicData}}{Categories}{(see \autoref{tab:pfAMSPcategorydynamicdata})}
+	\field{byte}{Priority}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the Handler structure}{pfAMSPhandler}
+	\field{uint64}{ID}{}
+	\field{uint32}{Flags}{}
+	\field{Vtr\tmpl{byte}}{Byte Code}{}
+\end{datastructure}
+
+\begin{datastructure}{!p}{the MetaSoundData structure}{pfAMSPmetasounddata}
+	\field{uint64}{Category}{}
+	\field{uint64}{End Cue}{}
+	\field{uint64}{ID}{}
+	\field{uint64}{Offset Bone}{}
+	\field{uint64}{Playlist ID}{}
+	\field{Vtr\tmpl{DSPData}}{DSP}{(see \autoref{tab:pfAMSPdspdata})}
+	\field{Ptr\tmpl{Attenuation}}{Attenuation}{(see \autoref{tab:pfAMSPattenuation})}
+	\field{Vtr\tmpl{FileNameData}}{Files}{(see \autoref{tab:pfAMSPfilenamedata})}
+	\field{float32}{Channel Fade-In}{}
+	\field{float32}{Channel Fade-Out}{}
+	\field{float32}{End Cue Offset}{}
+	\field{float32}{Fade-In Time}{}
+	\field{float32}{Fade-Out Time}{}
+	\field{float32[3]}{Position Offset}{}
+	\field{uint32}{Channel Max}{}
+	\field{uint32}{Flags}{}
+	\field{uint32}{Loop Count}{}
+	\field{DynamicParamData}{Depth}{(see \autoref{tab:pfAMSPdynamicparamdata})}
+	\field{DynamicParamData}{Pan}{}
+	\field{DynamicParamData}{Pitch}{}
+	\field{DynamicParamData}{Pitch MS}{}
+	\field{DynamicParamData}{Volume}{}
+	\field{DynamicParamData}{Volume MS}{}
+	\field{RangeData}{Initial Delay}{(see \autoref{tab:pfAMSPrangedata})}
+	\field{RangeData}{Play Length}{}
+	\field{RangeData}{Position Offset Angle}{}
+	\field{RangeData}{Position Range}{}
+	\field{RangeData}{Repeat Count}{}
+	\field{RangeData}{Repeat Time}{}
+	\field{RangeData}{Start Time Offset}{}
+	\field{byte}{Channel Mode}{}
+	\field{byte}{Channel Priority}{}
+	\field{byte}{File Iterate Mode}{}
+	\field{byte}{Loop Mode}{}
+	\field{byte}{Music Priority}{}
+	\field{byte}{Playback Mode}{}
+	\field{byte}{Position Mode}{}
+	\field{byte}{Repeat Time From}{}
+\end{datastructure}
+
+\begin{datastructure}{htbp}{the ScriptRef structure}{pfAMSPscriptref}
+	\field{uint64}{ID}{}
+	\field{Ptr\tmpl{FileRef}}{File}{}
+\end{datastructure}
+
+\begin{datastructure}{p}{the TriggerKey structure}{pfAMSPtriggerkey}
+	\field{uint64}{ID}{}
+	\field{Vtr\tmpl{TriggerMarker}}{Markers}{(see \autoref{tab:pfAMSPtriggermarker})}
+\end{datastructure}
+
+\begin{datastructure}{p}{the TriggerMarker structure}{pfAMSPtriggermarker}
+	\field{uint64}{Cue}{}
+	\field{uint64}{End}{}
+	\field{float32}{Time}{}
+	\field{byte}{Type}{}
+\end{datastructure}
+
+\clearpage
 

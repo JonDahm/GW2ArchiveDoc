@@ -9,7 +9,7 @@ The Material Pack File has two chunks -- \fourcc{`G'}{`R'}{`M'}{`T'} and
 
 This chunk has 11 fields:
 
-\begin{datastructure}{h}{GRMT Chunk Format}{pfAMATchunkGRMT}
+\begin{datastructure}{hb}{GRMT Chunk Format}{pfAMATchunkGRMT}
 	\field{byte}{Texture Array Range}{}
 	\field{byte}{Texture Count}{}
 	\field{byte}{Texture Transformation Range}{}
@@ -23,10 +23,53 @@ This chunk has 11 fields:
 	\field{Vtr\tmpl{uint64}}{Texture Tokens}{}
 \end{datastructure}
 
+TODO: Research what all these fields do.
+
 \subsection{Unknown Chunk (DX9S)}
 \label{subsec:pfAMATchunkDX9S}
 
-TODO: Finish this section
+This chunk has 3 fields and 5 different structures.
 
+\begin{datastructure}{hp}{DX9S Chunk Format}{pfAMATchunkDX9S}
+	\field{Vtr\tmpl{Sampler}}{Samplers}%
+	      {A list of all samplers for this Material.%
+	       See \autoref{tab:pfAMATsampler}.}
+	\field{Vtr\tmpl{Shader}}{Shaders}%
+	      {A list of all shaders for this Material.%
+	       See \autoref{tab:pfAMATshader}.}
+	\field{Vtr\tmpl{Technique}}{Techniques}{See \autoref{tab:pfAMATtechnique}.}
+\end{datastructure}
 
+\begin{datastructure}{hp}{Sampler Format}{pfAMATsampler}
+	\field{uint32}{Texture Index}{}
+	\field{Vtr\tmpl{uint32}}{State}{}
+\end{datastructure}
+
+\begin{datastructure}{hp}{Shader Format}{pfAMATshader}
+	\field{Vtr\tmpl{uint32}}{Shader}{}
+	\field{Vtr\tmpl{uint32}}{Constant Registers}{}
+	\field{Vtr\tmpl{uint32}}{Constant Tokens}{}
+	\field{uint16}{Number of Instructions}{}
+\end{datastructure}
+
+\begin{datastructure}{hp}{Technique Format}{pfAMATtechnique}
+	\field{String}{Name}{}
+	\field{Vtr\tmpl{RefList\tmpl{Effect}}}{Passes}{See \autoref{tab:pfAMATeffect}.}
+	\field{uint16}{Max PS Version}{}
+	\field{uint16}{Max VS Version}{}
+\end{datastructure}
+
+\begin{datastructure}{hp}{Effect Format}{pfAMATeffect}
+	\field{uint64}{Token}{}
+	\field{Vtr\tmpl{uint32}}{Render States}{}
+	\field{Vtr\tmpl{uint32}}{Sampler Index}{}
+	\field{uint32}{Pixel Shader}{}
+	\field{uint32}{Vertex Shader}{}
+	\field{Vtr\tmpl{uint32}}{Texture Gen}{}
+	\field{Vtr\tmpl{uint32}}{Texture Transform}{}
+	\field{uint32}{VS Gen Flags}{}
+	\field{uint32}{Pass Flags}{}
+\end{datastructure}
+
+\clearpage
 
